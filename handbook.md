@@ -35,7 +35,7 @@ Feel free to experiment with your own! The syntax below will help.
 ; A fibonacci function, that demonstrates
 ; usage of the stack, and statically allocated
 ; variables (which are the only type)
-(def/fn fibonacci (times)	    ; Function arguments are passed and returned via
+(def/fn fibonacci (times)       ; Function arguments are passed and returned via
                                 ; a global stack, with a well-defined calling
                                 ; convention.
                                 ;
@@ -58,11 +58,11 @@ Feel free to experiment with your own! The syntax below will help.
                                 ; PLAYBOX-11 has structured control flow.
                                 ; This will compile to the MACRO-11:
                                 ;
-                                ; UNTIL: CMP TIMES, #0
-                                ; 		 BEQ AFTER
-                                ; 		 ...
-                                ; 		 BR UNTIL
-                                ; AFTER: ...
+                                ; UNTIL:    CMP TIMES, #0
+                                ;           BEQ AFTER
+                                ;           ...
+                                ;           BR UNTIL
+                                ; AFTER:    ...
                                 ;
                                 ; Also, note the use of '\' instead of '/'. In general,
                                 ; statements in PLAYBOX-11 that hinge around an existing
@@ -70,12 +70,12 @@ Feel free to experiment with your own! The syntax below will help.
                                 ; scoped declarations) that have no equivalent in
                                 ; MACRO-11 use '/'s.
 
-            (mov n m)			; Most if not all primitive functions in PLAYBOX-11
-            (inc m)				; correspond to single instructions.
+            (mov n m)           ; Most if not all primitive functions in PLAYBOX-11
+            (inc m)	            ; correspond to single instructions.
 
-            )					; At this point, we return back to the `until`.
+            )                   ; At this point, we return back to the `until`.
 
-        (rts\with m)			; Functions return values on the stack.
+        (rts\with m)            ; Functions return values on the stack.
     )
 )
 
@@ -85,28 +85,28 @@ Feel free to experiment with your own! The syntax below will help.
 ; a test for divisibility, both by 2 and by 3, where the two
 ; divisibility tests are implemented in separate calls.
 (def/fn divisible-by-2-and-3? (n)
-    (let/jsr ((by-2? (divisible-by-2? n))	; Function calling is highly restricted:
-              (by-3? (divisible-by-3? n)))	; you can only call a function in the context
-                                                ; of `let/jsr` - i.e. when initializing a variable.
+    (let/jsr ((by-2? (divisible-by-2? n))   ; Function calling is highly restricted:
+              (by-3? (divisible-by-3? n)))  ; you can only call a function in the context
+                                            ; of `let/jsr` - i.e. when initializing a variable.
                                             ;
                                             ; Also remember (cf. `let/lit` above) that `let/lit`
                                             ; only initializes values with a direct function
                                             ; call. No `let` form initializes with an arbitrary
                                             ; expression.
 
-        (mul by-2? by-3?)					; (return AND of by-2 and by-3.)
-        (rts\with by-3?)					;   "  (ditto)
+        (mul by-2? by-3?)                   ; (return AND of by-2 and by-3.)
+        (rts\with by-3?)                    ;   "  (ditto)
 )
 (def/fn divisible-by-2? (n)
     (cmp\until-after (ble n 0)
         (sub #2 n)
     )
-    (cmp\if (eq n 0)						; `cmp\if` is our second conntrol flow expression.
-        ((rts\with 1))						; This will compile to the MACRO-11:
-        ((rts\with 0))						; 
-    )										; 		CMP N, #0
-                                            ; 		BEQ IFTRU
-                                            ; 		BR  IFFLS
+    (cmp\if (eq n 0)                        ; `cmp\if` is our second conntrol flow expression.
+        ((rts\with 1))                      ; This will compile to the MACRO-11:
+        ((rts\with 0))                      ; 
+    )                                       ;       CMP N, #0
+                                            ;       BEQ IFTRU
+                                            ;       BR  IFFLS
                                             ; IFTRU: ...
                                             ; IFFLS: ...
                                             ;
@@ -115,9 +115,9 @@ Feel free to experiment with your own! The syntax below will help.
                                             ; are not expressions, but consecutive statements wrapped
                                             ; in ()s. The ()s are OBLIGATORY.
                                             ; The syntax of `cmp\if` is, informally,
-                                            ; 	(cmp\if (COMPARISON STATEMENT)
-                                            ;		((STATEMENT TRUE-1) ...)
-                                            ;		((STATEMENT FALSE-1) ...))
+                                            ;   (cmp\if (COMPARISON STATEMENT)
+                                            ;       ((STATEMENT TRUE-1) ...)
+                                            ;       ((STATEMENT FALSE-1) ...))
 
 )
 (def/fn divisible-by-3? (n)
